@@ -1,293 +1,281 @@
 <!DOCTYPE html>
-<html lang="en">
+
+<html>
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DreamVerse AI | Future Simulator</title>
-  <style>
-    :root {
-      --neon-purple: #bc13fe;
-      --neon-cyan: #00f3ff;
-      --bg-dark: #020006;
-      --glass: rgba(255, 255, 255, 0.05);
-    }
 
-    body {
-      margin: 0;
-      background: radial-gradient(circle at top, #1b0033, var(--bg-dark));
-      color: var(--neon-cyan);
-      font-family: 'Segoe UI', 'Courier New', monospace;
-      text-align: center;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+<title>DreamVerse AI</title>
 
-    h1 {
-      color: var(--neon-purple);
-      text-shadow: 0 0 15px var(--neon-purple);
-      font-size: clamp(2rem, 8vw, 3.5rem);
-      margin-top: 40px;
-      letter-spacing: 4px;
-    }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    .box {
-      max-width: 800px;
-      width: 90%;
-      margin: 20px auto;
-      padding: 30px;
-      border: 1px solid var(--neon-purple);
-      box-shadow: 0 0 30px rgba(188, 19, 254, 0.2);
-      border-radius: 20px;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(10px);
-      transition: all 0.5s ease;
-    }
+<style>
 
-    input, select, button, textarea {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 14px;
-      margin: 10px 0;
-      border-radius: 8px;
-      border: 1px solid var(--neon-cyan);
-      background: #0a0012;
-      color: white;
-      font-size: 16px;
-      outline: none;
-    }
+body{margin:0;background:radial-gradient(circle at top,#21004a,#020006);color:#00f3ff;font-family:"Courier New",monospace;text-align:center}
 
-    input:focus, textarea:focus {
-      box-shadow: 0 0 10px var(--neon-cyan);
-    }
+h1{color:#bc13fe;text-shadow:0 0 25px #bc13fe;font-size:42px}
 
-    button {
-      background: var(--neon-purple);
-      border: none;
-      font-weight: bold;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: 0.3s;
-      margin-top: 20px;
-    }
+.box{max-width:850px;margin:25px auto;padding:25px;border:2px solid #bc13fe;box-shadow:0 0 25px #bc13fe;border-radius:18px;background:rgba(0,0,0,.75)}
 
-    button:hover {
-      background: var(--neon-cyan);
-      color: black;
-      box-shadow: 0 0 20px var(--neon-cyan);
-      transform: translateY(-2px);
-    }
+input,select,textarea,button{width:85%;max-width:620px;padding:13px;margin:9px;border-radius:10px;border:2px solid #00f3ff;background:#050008;color:#00f3ff;font-family:inherit}
 
-    .hidden { display: none; opacity: 0; }
+button{background:#bc13fe;color:white;cursor:pointer;box-shadow:0 0 15px #bc13fe}
 
-    .card {
-      text-align: left;
-      border-left: 4px solid var(--neon-cyan);
-      background: var(--glass);
-      padding: 20px;
-      margin: 15px 0;
-      border-radius: 4px;
-    }
+button:hover{background:#00f3ff;color:black}
 
-    .timeline {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 15px;
-      margin: 20px 0;
-    }
+.hidden{display:none}
 
-    .timeline-item {
-      background: rgba(188, 19, 254, 0.1);
-      padding: 15px;
-      border-radius: 10px;
-      border: 1px solid var(--neon-purple);
-    }
+.card{text-align:left;border:1px solid #00f3ff;box-shadow:0 0 15px #00f3ff;border-radius:14px;padding:18px;margin:15px;background:rgba(0,243,255,.06)}
 
-    .purple { color: var(--neon-purple); font-weight: bold; }
-    .gold { color: #ffd700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
-    
-    #shareCard {
-      border: 2px dashed #ffd700;
-      background: linear-gradient(45deg, rgba(0,0,0,0.9), rgba(27,0,51,0.9));
-      padding: 30px;
-    }
+.gold{color:gold;text-shadow:0 0 10px gold}
 
-    /* Animation */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .fade-in { animation: fadeIn 0.8s forwards; }
+.purple{color:#bc13fe;text-shadow:0 0 10px #bc13fe}
 
-  </style>
+.scan{height:160px;border:2px solid #00f3ff;position:relative;overflow:hidden;margin:15px;border-radius:12px}
+
+.line{position:absolute;width:100%;height:8px;background:#00f3ff;box-shadow:0 0 25px #00f3ff;animation:scan 2s infinite}
+
+@keyframes scan{0%{top:0}100%{top:160px}}
+
+.glitch{animation:glitch .15s infinite}
+
+@keyframes glitch{0%{transform:translate(1px,1px)}50%{transform:translate(-1px,0)}100%{transform:translate(0,-1px)}}
+
+.bar{height:18px;border:1px solid #00f3ff;margin:8px;border-radius:20px;overflow:hidden}
+
+.fill{height:100%;background:linear-gradient(90deg,#00f3ff,#bc13fe,gold)}
+
+</style>
+
 </head>
+
 <body>
 
-  <h1>DREAMVERSE AI</h1>
-  <p>Your future is being calculated...</p>
+<h1>DREAMVERSE AI</h1>
 
-  <div class="box" id="formBox">
-    <h2 class="purple">Initialize Consciousness</h2>
-    <input id="name" type="text" placeholder="Full Name">
-    <input id="age" type="number" placeholder="Current Age">
-    <input id="dream" type="text" placeholder="Your Biggest Dream">
-    <input id="fear" type="text" placeholder="Your Greatest Obstacle (Fear)">
-    <textarea id="goal" rows="2" placeholder="One daily habit to get there..."></textarea>
-    
-    <label style="display:block; margin-top:10px; font-size: 0.8em;">Select Archetype:</label>
-    <select id="personality">
-      <option value="creator">The Creator (Visionary)</option>
-      <option value="leader">The Leader (Influence)</option>
-      <option value="explorer">The Explorer (Discovery)</option>
-      <option value="genius">The Genius (Strategy)</option>
-      <option value="healer">The Healer (Empathy)</option>
-    </select>
-    
-    <button onclick="startDreamVerse()">Decrypt My Future</button>
-  </div>
+<p>Your future is being calculated...</p>
 
-  <div class="box hidden" id="resultBox">
-    <div class="fade-in">
-        <h2 class="purple">INTERFACE: YEAR 2045</h2>
-        <div id="futureMessage" class="card" style="white-space: pre-line;"></div>
-        
-        <h2 class="gold">Assigned Path</h2>
-        <div id="pathBox" class="card"></div>
+<div class="box" id="formBox">
 
-        <h2 class="purple">Convergence Timeline</h2>
-        <div id="timelineBox" class="timeline"></div>
+<h2 class="purple">Initialize Consciousness</h2>
 
-        <h2 class="gold">Protocol Warning</h2>
-        <div id="warningBox" class="card"></div>
+<input id="name" placeholder="Full Name">
 
-        <div id="quizContainer">
-            <h2 class="purple">Final Simulation Test</h2>
-            <div id="quizBox" class="card"></div>
-        </div>
+<input id="age" placeholder="Current Age">
 
-        <div id="shareCard" class="fade-in"></div>
-        
-        <button onclick="location.reload()">Reset Timeline</button>
-    </div>
-  </div>
+<input id="dream" placeholder="Your Biggest Dream">
+
+<input id="fear" placeholder="Your Greatest Obstacle / Fear">
+
+<textarea id="goal" placeholder="One daily habit to get there..."></textarea>
+
+<select id="type">
+
+<option value="Creator">The Creator</option>
+
+<option value="Leader">The Leader</option>
+
+<option value="Genius">The Genius</option>
+
+<option value="Explorer">The Explorer</option>
+
+<option value="Healer">The Healer</option>
+
+</select>
+
+<button onclick="start()">DECRYPT MY FUTURE</button>
+
+</div>
+
+<div class="box hidden" id="scanBox">
+
+<h2 class="gold">FACELESS MIND SCAN</h2>
+
+<div class="scan"><div class="line"></div></div>
+
+<p id="scanText">Scanning ambition...</p>
+
+</div>
+
+<div class="box hidden" id="resultBox">
+
+<h2 class="purple">TRANSMISSION RECEIVED</h2>
+
+<div id="message" class="card"></div>
+
+<h2 class="gold">Personality Power Chart</h2>
+
+<div class="card">
+
+<p>Ambition</p><div class="bar"><div class="fill" id="b1"></div></div>
+
+<p>Creativity</p><div class="bar"><div class="fill" id="b2"></div></div>
+
+<p>Courage</p><div class="bar"><div class="fill" id="b3"></div></div>
+
+<p>Focus</p><div class="bar"><div class="fill" id="b4"></div></div>
+
+</div>
+
+<h2 class="purple">Secret Warning</h2>
+
+<div id="warning" class="card glitch"></div>
+
+<h2 class="gold">Other Players’ Futures</h2>
+
+<div id="board" class="card"></div>
+
+<button onclick="location.reload()">Try Again</button>
+
+</div>
 
 <script>
-const state = {
-    user: {},
-    score: 0
-};
 
-function startDreamVerse() {
-    const fields = ['name', 'age', 'dream', 'fear', 'goal', 'personality'];
-    fields.forEach(f => state.user[f] = document.getElementById(f).value || "Undefined");
+let u={};
 
-    document.getElementById("formBox").style.display = "none";
-    const resBox = document.getElementById("resultBox");
-    resBox.classList.remove("hidden");
-    resBox.classList.add("fade-in");
+function start(){
 
-    runSimulation();
+u.name=name.value||"Unknown Dreamer";
+
+u.age=age.value||"13";
+
+u.dream=dream.value||"change the world";
+
+u.fear=fear.value||"giving up";
+
+u.goal=goal.value||"practice every day";
+
+u.type=type.value;
+
+formBox.classList.add("hidden");
+
+scanBox.classList.remove("hidden");
+
+let steps=[
+
+"Scanning ambition...",
+
+"Reading fear patterns...",
+
+"Detecting hidden power...",
+
+"WARNING: rare future energy found...",
+
+"Opening DreamVerse gate..."
+
+];
+
+let i=0;
+
+let timer=setInterval(()=>{
+
+scanText.innerText=steps[i];
+
+i++;
+
+if(i>=steps.length){
+
+clearInterval(timer);
+
+scanBox.classList.add("hidden");
+
+showResult();
+
 }
 
-function runSimulation() {
-    generateMessage();
-    generatePath();
-    generateTimeline();
-    generateWarning();
-    generateQuiz();
-    generateShareCard();
+},1000);
+
 }
 
-function generateMessage() {
-    const msg = `Transmission received, ${state.user.name}.
-    
-    In the year 2045, "${state.user.dream}" is no longer a wish—it is your reality. 
-    We remember when you were ${state.user.age} and afraid of "${state.user.fear}". 
-    
-    The turning point was when you decided to: ${state.user.goal}. 
-    Fortune favors the persistent.`;
-    
-    // Smooth text reveal
-    const el = document.getElementById("futureMessage");
-    let i = 0;
-    el.innerHTML = "";
-    const interval = setInterval(() => {
-        el.innerHTML += msg.charAt(i);
-        i++;
-        if (i >= msg.length) clearInterval(interval);
-    }, 20);
+function showResult(){
+
+resultBox.classList.remove("hidden");
+
+let text=`Hello ${u.name}.
+
+This is your future self speaking.
+
+You think your dream, "${u.dream}", is far away.
+
+But the DreamVerse detected something unusual in you.
+
+Your fear is "${u.fear}", but it is not your enemy.
+
+It is the final door before your next level.
+
+Your archetype is: ${u.type}.
+
+Your daily key is: ${u.goal}.
+
+SECRET MESSAGE:
+
+In the future, people remember you not because you were perfect,
+
+but because you started before you felt ready.`;
+
+typeText("message",text);
+
+warning.innerHTML="⚠️ Do not ignore the small opportunity that appears when you feel unready.";
+
+b1.style.width=random()+"%";
+
+b2.style.width=random()+"%";
+
+b3.style.width=random()+"%";
+
+b4.style.width=random()+"%";
+
+board.innerHTML=`
+
+<p>Nova_17 → Became a legendary creator.</p>
+
+<p>CyberMoon → Solved the impossible problem.</p>
+
+<p>FutureGhost → Turned fear into fame.</p>
+
+<p>${u.name} → Timeline currently unstable...</p>
+
+`;
+
+speak("DreamVerse scan complete. Your future path has been unlocked.");
+
 }
 
-function generatePath() {
-    const paths = {
-        creator: "Your imagination reshapes the digital frontier.",
-        leader: "Your voice commands the respect of thousands.",
-        explorer: "You map territories others didn't know existed.",
-        genius: "Your logic cracks the codes of the new era.",
-        healer: "You are the glue that keeps humanity together."
-    };
-    document.getElementById("pathBox").innerHTML = `
-        <strong class="purple">${state.user.personality.toUpperCase()}</strong>: ${paths[state.user.personality]}
-    `;
+function random(){return Math.floor(Math.random()*45)+55}
+
+function typeText(id,text){
+
+let el=document.getElementById(id);
+
+el.innerHTML="";
+
+let i=0;
+
+let t=setInterval(()=>{
+
+el.innerHTML+=text.charAt(i);
+
+i++;
+
+if(i>=text.length)clearInterval(t);
+
+},20);
+
 }
 
-function generateTimeline() {
-    const age = parseInt(state.user.age) || 20;
-    const items = [
-        { a: age + 2, t: "The Catalyst", d: "A sudden event forces you to grow." },
-        { a: age + 7, t: "The Peak", d: "You achieve a milestone that silences doubters." },
-        { a: age + 15, t: "Legacy", d: "You begin mentoring the next generation." }
-    ];
-    
-    document.getElementById("timelineBox").innerHTML = items.map(i => `
-        <div class="timeline-item">
-            <div class="gold">Age ${i.a}</div>
-            <div style="font-size:0.9em"><strong>${i.t}</strong><br>${i.d}</div>
-        </div>
-    `).join('');
+function speak(text){
+
+let voice=new SpeechSynthesisUtterance(text);
+
+voice.rate=.9;
+
+voice.pitch=1.1;
+
+speechSynthesis.speak(voice);
+
 }
 
-function generateWarning() {
-    const warns = [
-        "Speed is irrelevant if you're heading in the wrong direction.",
-        "Your greatest enemy is a version of yourself that is too comfortable.",
-        "Don't trade your future for temporary validation."
-    ];
-    const pick = warns[Math.floor(Math.random() * warns.length)];
-    document.getElementById("warningBox").innerHTML = `<span class="purple">ALERT:</span> ${pick}`;
-}
-
-function generateQuiz() {
-    document.getElementById("quizBox").innerHTML = `
-        <p>Your future self sends a single key. Which door do you open?</p>
-        <button onclick="handleQuiz(true)">The door of Discipline</button>
-        <button onclick="handleQuiz(false)">The door of 'Waiting for the right time'</button>
-    `;
-}
-
-function handleQuiz(correct) {
-    const box = document.getElementById("quizBox");
-    if(correct) {
-        state.score = 1;
-        box.innerHTML = "<h3 class='gold'>SIMULATION PASSED. Timeline Secured.</h3>";
-    } else {
-        box.innerHTML = "<h3 class='purple'>ERROR. Stagnation detected. Try again.</h3>";
-        setTimeout(generateQuiz, 2000);
-    }
-    generateShareCard();
-}
-
-function generateShareCard() {
-    document.getElementById("shareCard").innerHTML = `
-        <h2 class="gold">DREAMER IDENTITY CARD</h2>
-        <p><strong>SUBJECT:</strong> ${state.user.name}</p>
-        <p><strong>DREAM:</strong> ${state.user.dream}</p>
-        <p><strong>ARCHETYPE:</strong> ${state.user.personality}</p>
-        <p><strong>STATUS:</strong> ${state.score > 0 ? 'FUTURE SECURED' : 'PENDING...'}</p>
-        <p style="font-style: italic">"${state.user.goal}"</p>
-    `;
-}
 </script>
+
 </body>
+
 </html>
