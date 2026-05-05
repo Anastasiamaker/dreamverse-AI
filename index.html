@@ -1,288 +1,125 @@
 <!DOCTYPE html>
-
 <html>
-
 <head>
-
-<title>DreamVerse AI Camera Scan</title>
-
+<title>Neon Arcade</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <style>
-
-body{margin:0;background:radial-gradient(circle at top,#21004a,#020006);color:#00f3ff;font-family:"Courier New",monospace;text-align:center}
-
-h1{color:#bc13fe;text-shadow:0 0 25px #bc13fe}
-
-.box{max-width:850px;margin:25px auto;padding:25px;border:2px solid #bc13fe;box-shadow:0 0 25px #bc13fe;border-radius:18px;background:rgba(0,0,0,.75)}
-
-input,textarea,select,button{width:85%;max-width:600px;padding:13px;margin:9px;border-radius:10px;border:2px solid #00f3ff;background:#050008;color:#00f3ff;font-family:inherit}
-
-button{background:#bc13fe;color:white;cursor:pointer;box-shadow:0 0 15px #bc13fe}
-
-.hidden{display:none}
-
-#cameraBox{position:relative;width:320px;height:240px;margin:20px auto;border:2px solid #00f3ff;box-shadow:0 0 25px #00f3ff;overflow:hidden;border-radius:15px}
-
-video{width:100%;height:100%;object-fit:cover}
-
-.scanLine{position:absolute;left:0;width:100%;height:8px;background:#00f3ff;box-shadow:0 0 25px #00f3ff;animation:scan 2s infinite}
-
-@keyframes scan{0%{top:0}100%{top:240px}}
-
-.card{text-align:left;border:1px solid #00f3ff;box-shadow:0 0 15px #00f3ff;border-radius:14px;padding:18px;margin:15px;background:rgba(0,243,255,.06);white-space:pre-line}
-
-.gold{color:gold;text-shadow:0 0 10px gold}
-
-.purple{color:#bc13fe;text-shadow:0 0 10px #bc13fe}
-
+body{margin:0;background:#050008;color:#00f3ff;font-family:"Courier New",monospace;text-align:center}
+h1{font-size:55px;color:#bc13fe;text-shadow:0 0 25px #bc13fe;letter-spacing:10px}
+p{font-size:14px}
+.badges span{border:2px solid #00f3ff;border-radius:20px;padding:8px 14px;margin:6px;display:inline-block;box-shadow:0 0 12px #00f3ff}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:25px;padding:30px;max-width:1100px;margin:auto}
+.card{padding:25px;border:3px solid #bc13fe;border-radius:12px;box-shadow:0 0 25px #bc13fe;background:rgba(0,0,0,.7);transition:.3s}
+.card:hover{transform:scale(1.05)}
+.card h2{color:#00f3ff}
+button{padding:12px 30px;background:#050008;color:#00f3ff;border:2px solid #00f3ff;box-shadow:0 0 15px #00f3ff;border-radius:5px;cursor:pointer}
+button:hover{background:#bc13fe;color:white}
+#game{max-width:850px;margin:25px auto;padding:25px;border:2px solid #00f3ff;box-shadow:0 0 25px #00f3ff;border-radius:15px}
+input{padding:12px;background:#000;color:#00f3ff;border:2px solid #00f3ff}
 </style>
-
 </head>
-
 <body>
 
-<h1>DREAMVERSE AI</h1>
+<h1>NEON ARCADE</h1>
+<p>7 AWESOME GAMES • SAFE • FUN FOR EVERYONE</p>
 
-<p>Real camera scan + future simulator</p>
-
-<div class="box" id="formBox">
-
-<h2 class="purple">Enter the DreamVerse</h2>
-
-<input id="name" placeholder="Your name">
-
-<input id="age" placeholder="Your age">
-
-<input id="dream" placeholder="Your biggest dream">
-
-<input id="fear" placeholder="Your biggest fear">
-
-<textarea id="goal" placeholder="Your main goal"></textarea>
-
-<select id="type">
-
-<option>Creator</option>
-
-<option>Leader</option>
-
-<option>Genius</option>
-
-<option>Explorer</option>
-
-<option>Healer</option>
-
-</select>
-
-<button onclick="startCamera()">Start Real Face Scan</button>
-
+<div class="badges">
+<span>✅ MOM APPROVED</span>
+<span>🟢 SAFE CHAT FILTER ON</span>
 </div>
 
-<div class="box hidden" id="scanBox">
-
-<h2 class="gold">CAMERA FACE SCAN</h2>
-
-<p>Allow camera permission when your browser asks.</p>
-
-<div id="cameraBox">
-
-<video id="video" autoplay playsinline></video>
-
-<div class="scanLine"></div>
-
-</div>
-
-<p id="scanText">Initializing camera...</p>
-
-<button onclick="analyzeFuture()">Analyze My Future</button>
-
-</div>
-
-<div class="box hidden" id="resultBox">
-
-<h2 class="purple">TRANSMISSION RECEIVED</h2>
-
-<div id="message" class="card"></div>
-
-<h2 class="gold">Secret Warning</h2>
-
-<div id="warning" class="card"></div>
-
-<button onclick="location.reload()">Try Again</button>
-
-</div>
+<div class="grid" id="menu"></div>
+<div id="game"></div>
 
 <script>
-
-let user={};
-
-let stream=null;
-
-async function startCamera(){
-
-user.name=name.value||"Unknown Dreamer";
-
-user.age=age.value||"13";
-
-user.dream=dream.value||"change the world";
-
-user.fear=fear.value||"giving up";
-
-user.goal=goal.value||"practice every day";
-
-user.type=type.value;
-
-formBox.classList.add("hidden");
-
-scanBox.classList.remove("hidden");
-
-try{
-
-stream=await navigator.mediaDevices.getUserMedia({video:true,audio:false});
-
-video.srcObject=stream;
-
-scanText.innerText="Camera connected. Scanning face energy...";
-
-}catch(error){
-
-scanText.innerText="Camera permission was blocked. You can still continue.";
-
-}
-
-}
-
-function analyzeFuture(){
-
-let steps=[
-
-"Scanning face structure...",
-
-"Reading ambition signal...",
-
-"Detecting hidden fear...",
-
-"Opening future timeline...",
-
-"DreamVerse result unlocked..."
-
+let games=[
+["💬 Neon Underground","Chat, earn XP, and level up together.",chatGame],
+["☝️ Neon Tap","Tap as fast as you can in 10 seconds.",tapGame],
+["🎨 Color Rush","Pick the ink color, not the word.",colorGame],
+["🧠 Memory Glow","Flip cards and match every pair.",memoryGame],
+["🔢 Math Blaster","Solve math before time runs out.",mathGame],
+["abc Word Scramble","Unscramble the neon letters.",wordGame],
+["🟣 Simon Says","Repeat the glowing pattern.",simonGame]
 ];
 
-let i=0;
+let menu=document.getElementById("menu");
+let game=document.getElementById("game");
 
-let timer=setInterval(()=>{
+games.forEach((g,i)=>{
+menu.innerHTML+=`
+<div class="card">
+<h2>${g[0]}</h2>
+<p>${g[1]}</p>
+<button onclick="games[${i}][2]()">▶ PLAY NOW</button>
+</div>`;
+});
 
-scanText.innerText=steps[i];
+function back(){game.innerHTML=""}
 
-i++;
-
-if(i>=steps.length){
-
-clearInterval(timer);
-
-if(stream){stream.getTracks().forEach(track=>track.stop());}
-
-scanBox.classList.add("hidden");
-
-showResult();
-
+function chatGame(){
+let xp=0;
+game.innerHTML=`
+<h2>Neon Underground</h2>
+<p>XP: <span id="xp">0</span></p>
+<div id="chat" style="height:220px;overflow:auto;border:2px solid #bc13fe;margin:15px;padding:10px;text-align:left"></div>
+<input id="msg" placeholder="Type message...">
+<button onclick="send()">Send</button>
+<br><button onclick="back()">Back</button>`;
+window.send=()=>{
+if(msg.value.trim()=="")return;
+chat.innerHTML+="<p><b>You:</b> "+msg.value+"</p>";
+xp+=10;
+document.getElementById("xp").innerText=xp;
+msg.value="";
+};
 }
 
-},900);
-
+function tapGame(){
+let score=0,time=10;
+game.innerHTML=`<h2>Neon Tap</h2><p>Time: <span id="t">10</span></p><h2>Score: <span id="s">0</span></h2><button onclick="score++;s.innerText=score">TAP!</button><br><button onclick="back()">Back</button>`;
+let timer=setInterval(()=>{time--;t.innerText=time;if(time<=0){clearInterval(timer);alert("Score: "+score)}},1000);
 }
 
-function showResult(){
-
-resultBox.classList.remove("hidden");
-
-let text =
-
-`Hello ${user.name}.
-
-DreamVerse AI has completed your scan.
-
-Your future path is: ${user.type}.
-
-Your dream is "${user.dream}".
-
-Your fear is "${user.fear}".
-
-But the scan detected something powerful:
-
-your fear is not stopping you — it is testing you.
-
-If you keep doing this one thing:
-
-"${user.goal}"
-
-then your future self becomes stronger than your current doubts.
-
-SYSTEM MESSAGE:
-
-You are closer than you think.`;
-
-typeText("message",text);
-
-warning.innerText =
-
-"⚠️ Secret warning: The moment you feel unready is exactly when your next level begins.";
-
-speak("DreamVerse scan complete. Your future path has been unlocked.");
-
+function colorGame(){
+let colors=["red","blue","green","yellow","purple"];
+let real=colors[Math.floor(Math.random()*colors.length)];
+let fake=colors[Math.floor(Math.random()*colors.length)];
+game.innerHTML=`<h2>Color Rush</h2><h1 style="color:${real}">${fake}</h1>${colors.map(c=>`<button onclick="alert('${real}'=='${c}'?'Correct!':'Wrong!')">${c}</button>`).join("")}<br><button onclick="back()">Back</button>`;
 }
 
-function typeText(id,text){
-
-let el=document.getElementById(id);
-
-el.innerHTML="";
-
-let i=0;
-
-let timer=setInterval(()=>{
-
-el.innerHTML+=text.charAt(i);
-
-i++;
-
-if(i>=text.length)clearInterval(timer);
-
-},22);
-
+function memoryGame(){
+let icons=["🚀","👾","💎","🔥"],cards=[...icons,...icons].sort(()=>Math.random()-0.5);
+let first=null,found=0;
+game.innerHTML=`<h2>Memory Glow</h2><div id="board" class="grid"></div><button onclick="back()">Back</button>`;
+cards.forEach((c,i)=>board.innerHTML+=`<button id="c${i}" onclick="flip(${i},'${c}')">?</button>`);
+window.flip=(i,c)=>{
+let b=document.getElementById("c"+i);
+if(b.innerText!="?")return;
+b.innerText=c;
+if(!first)first=[i,c];
+else if(first[1]==c){found++;first=null;if(found==icons.length)alert("You win!")}
+else setTimeout(()=>{b.innerText="?";document.getElementById("c"+first[0]).innerText="?";first=null},700);
+}
 }
 
-function speak(text){
-
-let voice=new SpeechSynthesisUtterance(text);
-
-voice.rate=.9;
-
-voice.pitch=1.1;
-
-speechSynthesis.speak(voice);
-
+function mathGame(){
+let a=Math.ceil(Math.random()*20),b=Math.ceil(Math.random()*20);
+game.innerHTML=`<h2>Math Blaster</h2><p>${a}+${b}=?</p><input id="ans"><button onclick="alert(Number(ans.value)==${a+b}?'Correct!':'Wrong!')">OK</button><br><button onclick="back()">Back</button>`;
 }
 
+function wordGame(){
+let words=["NEON","ARCADE","CYBER","LASER"];
+let w=words[Math.floor(Math.random()*words.length)];
+let scr=w.split("").sort(()=>Math.random()-0.5).join("");
+game.innerHTML=`<h2>Word Scramble</h2><h1>${scr}</h1><input id="word"><button onclick="alert(word.value.toUpperCase()=='${w}'?'Correct!':'Try again!')">Check</button><br><button onclick="back()">Back</button>`;
+}
+
+function simonGame(){
+let colors=["🔴","🟢","🔵","🟡"];
+let pattern=[colors[Math.floor(Math.random()*4)],colors[Math.floor(Math.random()*4)],colors[Math.floor(Math.random()*4)]];
+game.innerHTML=`<h2>Simon Says</h2><p>Remember this:</p><h1>${pattern.join(" ")}</h1><button onclick="alert('Pattern was: ${pattern.join(" ")}')">Show Answer</button><br><button onclick="back()">Back</button>`;
+}
 </script>
 
 </body>
-
-</html>
-
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-    <title>Neon Arcade</title>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
 </html>
