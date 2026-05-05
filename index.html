@@ -4,7 +4,7 @@
 
 <head>
 
-<title>DreamVerse AI</title>
+<title>DreamVerse AI Camera Scan</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -12,37 +12,29 @@
 
 body{margin:0;background:radial-gradient(circle at top,#21004a,#020006);color:#00f3ff;font-family:"Courier New",monospace;text-align:center}
 
-h1{color:#bc13fe;text-shadow:0 0 25px #bc13fe;font-size:42px}
+h1{color:#bc13fe;text-shadow:0 0 25px #bc13fe}
 
 .box{max-width:850px;margin:25px auto;padding:25px;border:2px solid #bc13fe;box-shadow:0 0 25px #bc13fe;border-radius:18px;background:rgba(0,0,0,.75)}
 
-input,select,textarea,button{width:85%;max-width:620px;padding:13px;margin:9px;border-radius:10px;border:2px solid #00f3ff;background:#050008;color:#00f3ff;font-family:inherit}
+input,textarea,select,button{width:85%;max-width:600px;padding:13px;margin:9px;border-radius:10px;border:2px solid #00f3ff;background:#050008;color:#00f3ff;font-family:inherit}
 
 button{background:#bc13fe;color:white;cursor:pointer;box-shadow:0 0 15px #bc13fe}
 
-button:hover{background:#00f3ff;color:black}
-
 .hidden{display:none}
 
-.card{text-align:left;border:1px solid #00f3ff;box-shadow:0 0 15px #00f3ff;border-radius:14px;padding:18px;margin:15px;background:rgba(0,243,255,.06)}
+#cameraBox{position:relative;width:320px;height:240px;margin:20px auto;border:2px solid #00f3ff;box-shadow:0 0 25px #00f3ff;overflow:hidden;border-radius:15px}
+
+video{width:100%;height:100%;object-fit:cover}
+
+.scanLine{position:absolute;left:0;width:100%;height:8px;background:#00f3ff;box-shadow:0 0 25px #00f3ff;animation:scan 2s infinite}
+
+@keyframes scan{0%{top:0}100%{top:240px}}
+
+.card{text-align:left;border:1px solid #00f3ff;box-shadow:0 0 15px #00f3ff;border-radius:14px;padding:18px;margin:15px;background:rgba(0,243,255,.06);white-space:pre-line}
 
 .gold{color:gold;text-shadow:0 0 10px gold}
 
 .purple{color:#bc13fe;text-shadow:0 0 10px #bc13fe}
-
-.scan{height:160px;border:2px solid #00f3ff;position:relative;overflow:hidden;margin:15px;border-radius:12px}
-
-.line{position:absolute;width:100%;height:8px;background:#00f3ff;box-shadow:0 0 25px #00f3ff;animation:scan 2s infinite}
-
-@keyframes scan{0%{top:0}100%{top:160px}}
-
-.glitch{animation:glitch .15s infinite}
-
-@keyframes glitch{0%{transform:translate(1px,1px)}50%{transform:translate(-1px,0)}100%{transform:translate(0,-1px)}}
-
-.bar{height:18px;border:1px solid #00f3ff;margin:8px;border-radius:20px;overflow:hidden}
-
-.fill{height:100%;background:linear-gradient(90deg,#00f3ff,#bc13fe,gold)}
 
 </style>
 
@@ -52,47 +44,57 @@ button:hover{background:#00f3ff;color:black}
 
 <h1>DREAMVERSE AI</h1>
 
-<p>Your future is being calculated...</p>
+<p>Real camera scan + future simulator</p>
 
 <div class="box" id="formBox">
 
-<h2 class="purple">Initialize Consciousness</h2>
+<h2 class="purple">Enter the DreamVerse</h2>
 
-<input id="name" placeholder="Full Name">
+<input id="name" placeholder="Your name">
 
-<input id="age" placeholder="Current Age">
+<input id="age" placeholder="Your age">
 
-<input id="dream" placeholder="Your Biggest Dream">
+<input id="dream" placeholder="Your biggest dream">
 
-<input id="fear" placeholder="Your Greatest Obstacle / Fear">
+<input id="fear" placeholder="Your biggest fear">
 
-<textarea id="goal" placeholder="One daily habit to get there..."></textarea>
+<textarea id="goal" placeholder="Your main goal"></textarea>
 
 <select id="type">
 
-<option value="Creator">The Creator</option>
+<option>Creator</option>
 
-<option value="Leader">The Leader</option>
+<option>Leader</option>
 
-<option value="Genius">The Genius</option>
+<option>Genius</option>
 
-<option value="Explorer">The Explorer</option>
+<option>Explorer</option>
 
-<option value="Healer">The Healer</option>
+<option>Healer</option>
 
 </select>
 
-<button onclick="start()">DECRYPT MY FUTURE</button>
+<button onclick="startCamera()">Start Real Face Scan</button>
 
 </div>
 
 <div class="box hidden" id="scanBox">
 
-<h2 class="gold">FACELESS MIND SCAN</h2>
+<h2 class="gold">CAMERA FACE SCAN</h2>
 
-<div class="scan"><div class="line"></div></div>
+<p>Allow camera permission when your browser asks.</p>
 
-<p id="scanText">Scanning ambition...</p>
+<div id="cameraBox">
+
+<video id="video" autoplay playsinline></video>
+
+<div class="scanLine"></div>
+
+</div>
+
+<p id="scanText">Initializing camera...</p>
+
+<button onclick="analyzeFuture()">Analyze My Future</button>
 
 </div>
 
@@ -102,27 +104,9 @@ button:hover{background:#00f3ff;color:black}
 
 <div id="message" class="card"></div>
 
-<h2 class="gold">Personality Power Chart</h2>
+<h2 class="gold">Secret Warning</h2>
 
-<div class="card">
-
-<p>Ambition</p><div class="bar"><div class="fill" id="b1"></div></div>
-
-<p>Creativity</p><div class="bar"><div class="fill" id="b2"></div></div>
-
-<p>Courage</p><div class="bar"><div class="fill" id="b3"></div></div>
-
-<p>Focus</p><div class="bar"><div class="fill" id="b4"></div></div>
-
-</div>
-
-<h2 class="purple">Secret Warning</h2>
-
-<div id="warning" class="card glitch"></div>
-
-<h2 class="gold">Other Players’ Futures</h2>
-
-<div id="board" class="card"></div>
+<div id="warning" class="card"></div>
 
 <button onclick="location.reload()">Try Again</button>
 
@@ -130,37 +114,57 @@ button:hover{background:#00f3ff;color:black}
 
 <script>
 
-let u={};
+let user={};
 
-function start(){
+let stream=null;
 
-u.name=name.value||"Unknown Dreamer";
+async function startCamera(){
 
-u.age=age.value||"13";
+user.name=name.value||"Unknown Dreamer";
 
-u.dream=dream.value||"change the world";
+user.age=age.value||"13";
 
-u.fear=fear.value||"giving up";
+user.dream=dream.value||"change the world";
 
-u.goal=goal.value||"practice every day";
+user.fear=fear.value||"giving up";
 
-u.type=type.value;
+user.goal=goal.value||"practice every day";
+
+user.type=type.value;
 
 formBox.classList.add("hidden");
 
 scanBox.classList.remove("hidden");
 
+try{
+
+stream=await navigator.mediaDevices.getUserMedia({video:true,audio:false});
+
+video.srcObject=stream;
+
+scanText.innerText="Camera connected. Scanning face energy...";
+
+}catch(error){
+
+scanText.innerText="Camera permission was blocked. You can still continue.";
+
+}
+
+}
+
+function analyzeFuture(){
+
 let steps=[
 
-"Scanning ambition...",
+"Scanning face structure...",
 
-"Reading fear patterns...",
+"Reading ambition signal...",
 
-"Detecting hidden power...",
+"Detecting hidden fear...",
 
-"WARNING: rare future energy found...",
+"Opening future timeline...",
 
-"Opening DreamVerse gate..."
+"DreamVerse result unlocked..."
 
 ];
 
@@ -176,13 +180,15 @@ if(i>=steps.length){
 
 clearInterval(timer);
 
+if(stream){stream.getTracks().forEach(track=>track.stop());}
+
 scanBox.classList.add("hidden");
 
 showResult();
 
 }
 
-},1000);
+},900);
 
 }
 
@@ -190,57 +196,41 @@ function showResult(){
 
 resultBox.classList.remove("hidden");
 
-let text=`Hello ${u.name}.
+let text =
 
-This is your future self speaking.
+`Hello ${user.name}.
 
-You think your dream, "${u.dream}", is far away.
+DreamVerse AI has completed your scan.
 
-But the DreamVerse detected something unusual in you.
+Your future path is: ${user.type}.
 
-Your fear is "${u.fear}", but it is not your enemy.
+Your dream is "${user.dream}".
 
-It is the final door before your next level.
+Your fear is "${user.fear}".
 
-Your archetype is: ${u.type}.
+But the scan detected something powerful:
 
-Your daily key is: ${u.goal}.
+your fear is not stopping you — it is testing you.
 
-SECRET MESSAGE:
+If you keep doing this one thing:
 
-In the future, people remember you not because you were perfect,
+"${user.goal}"
 
-but because you started before you felt ready.`;
+then your future self becomes stronger than your current doubts.
+
+SYSTEM MESSAGE:
+
+You are closer than you think.`;
 
 typeText("message",text);
 
-warning.innerHTML="⚠️ Do not ignore the small opportunity that appears when you feel unready.";
+warning.innerText =
 
-b1.style.width=random()+"%";
-
-b2.style.width=random()+"%";
-
-b3.style.width=random()+"%";
-
-b4.style.width=random()+"%";
-
-board.innerHTML=`
-
-<p>Nova_17 → Became a legendary creator.</p>
-
-<p>CyberMoon → Solved the impossible problem.</p>
-
-<p>FutureGhost → Turned fear into fame.</p>
-
-<p>${u.name} → Timeline currently unstable...</p>
-
-`;
+"⚠️ Secret warning: The moment you feel unready is exactly when your next level begins.";
 
 speak("DreamVerse scan complete. Your future path has been unlocked.");
 
 }
-
-function random(){return Math.floor(Math.random()*45)+55}
 
 function typeText(id,text){
 
@@ -250,15 +240,15 @@ el.innerHTML="";
 
 let i=0;
 
-let t=setInterval(()=>{
+let timer=setInterval(()=>{
 
 el.innerHTML+=text.charAt(i);
 
 i++;
 
-if(i>=text.length)clearInterval(t);
+if(i>=text.length)clearInterval(timer);
 
-},20);
+},22);
 
 }
 
@@ -279,3 +269,4 @@ speechSynthesis.speak(voice);
 </body>
 
 </html>
+
