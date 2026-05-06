@@ -1,125 +1,62 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Neon Arcade</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-body{margin:0;background:#050008;color:#00f3ff;font-family:"Courier New",monospace;text-align:center}
-h1{font-size:55px;color:#bc13fe;text-shadow:0 0 25px #bc13fe;letter-spacing:10px}
-p{font-size:14px}
-.badges span{border:2px solid #00f3ff;border-radius:20px;padding:8px 14px;margin:6px;display:inline-block;box-shadow:0 0 12px #00f3ff}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:25px;padding:30px;max-width:1100px;margin:auto}
-.card{padding:25px;border:3px solid #bc13fe;border-radius:12px;box-shadow:0 0 25px #bc13fe;background:rgba(0,0,0,.7);transition:.3s}
-.card:hover{transform:scale(1.05)}
-.card h2{color:#00f3ff}
-button{padding:12px 30px;background:#050008;color:#00f3ff;border:2px solid #00f3ff;box-shadow:0 0 15px #00f3ff;border-radius:5px;cursor:pointer}
-button:hover{background:#bc13fe;color:white}
-#game{max-width:850px;margin:25px auto;padding:25px;border:2px solid #00f3ff;box-shadow:0 0 25px #00f3ff;border-radius:15px}
-input{padding:12px;background:#000;color:#00f3ff;border:2px solid #00f3ff}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-<h1>NEON ARCADE</h1>
-<p>7 AWESOME GAMES • SAFE • FUN FOR EVERYONE</p>
-
-<div class="badges">
-<span>✅ MOM APPROVED</span>
-<span>🟢 SAFE CHAT FILTER ON</span>
-</div>
-
-<div class="grid" id="menu"></div>
-<div id="game"></div>
-
-<script>
-let games=[
-["💬 Neon Underground","Chat, earn XP, and level up together.",chatGame],
-["☝️ Neon Tap","Tap as fast as you can in 10 seconds.",tapGame],
-["🎨 Color Rush","Pick the ink color, not the word.",colorGame],
-["🧠 Memory Glow","Flip cards and match every pair.",memoryGame],
-["🔢 Math Blaster","Solve math before time runs out.",mathGame],
-["abc Word Scramble","Unscramble the neon letters.",wordGame],
-["🟣 Simon Says","Repeat the glowing pattern.",simonGame]
-];
-
-let menu=document.getElementById("menu");
-let game=document.getElementById("game");
-
-games.forEach((g,i)=>{
-menu.innerHTML+=`
-<div class="card">
-<h2>${g[0]}</h2>
-<p>${g[1]}</p>
-<button onclick="games[${i}][2]()">▶ PLAY NOW</button>
-</div>`;
-});
-
-function back(){game.innerHTML=""}
-
-function chatGame(){
-let xp=0;
-game.innerHTML=`
-<h2>Neon Underground</h2>
-<p>XP: <span id="xp">0</span></p>
-<div id="chat" style="height:220px;overflow:auto;border:2px solid #bc13fe;margin:15px;padding:10px;text-align:left"></div>
-<input id="msg" placeholder="Type message...">
-<button onclick="send()">Send</button>
-<br><button onclick="back()">Back</button>`;
-window.send=()=>{
-if(msg.value.trim()=="")return;
-chat.innerHTML+="<p><b>You:</b> "+msg.value+"</p>";
-xp+=10;
-document.getElementById("xp").innerText=xp;
-msg.value="";
-};
-}
-
-function tapGame(){
-let score=0,time=10;
-game.innerHTML=`<h2>Neon Tap</h2><p>Time: <span id="t">10</span></p><h2>Score: <span id="s">0</span></h2><button onclick="score++;s.innerText=score">TAP!</button><br><button onclick="back()">Back</button>`;
-let timer=setInterval(()=>{time--;t.innerText=time;if(time<=0){clearInterval(timer);alert("Score: "+score)}},1000);
-}
-
-function colorGame(){
-let colors=["red","blue","green","yellow","purple"];
-let real=colors[Math.floor(Math.random()*colors.length)];
-let fake=colors[Math.floor(Math.random()*colors.length)];
-game.innerHTML=`<h2>Color Rush</h2><h1 style="color:${real}">${fake}</h1>${colors.map(c=>`<button onclick="alert('${real}'=='${c}'?'Correct!':'Wrong!')">${c}</button>`).join("")}<br><button onclick="back()">Back</button>`;
-}
-
-function memoryGame(){
-let icons=["🚀","👾","💎","🔥"],cards=[...icons,...icons].sort(()=>Math.random()-0.5);
-let first=null,found=0;
-game.innerHTML=`<h2>Memory Glow</h2><div id="board" class="grid"></div><button onclick="back()">Back</button>`;
-cards.forEach((c,i)=>board.innerHTML+=`<button id="c${i}" onclick="flip(${i},'${c}')">?</button>`);
-window.flip=(i,c)=>{
-let b=document.getElementById("c"+i);
-if(b.innerText!="?")return;
-b.innerText=c;
-if(!first)first=[i,c];
-else if(first[1]==c){found++;first=null;if(found==icons.length)alert("You win!")}
-else setTimeout(()=>{b.innerText="?";document.getElementById("c"+first[0]).innerText="?";first=null},700);
-}
-}
-
-function mathGame(){
-let a=Math.ceil(Math.random()*20),b=Math.ceil(Math.random()*20);
-game.innerHTML=`<h2>Math Blaster</h2><p>${a}+${b}=?</p><input id="ans"><button onclick="alert(Number(ans.value)==${a+b}?'Correct!':'Wrong!')">OK</button><br><button onclick="back()">Back</button>`;
-}
-
-function wordGame(){
-let words=["NEON","ARCADE","CYBER","LASER"];
-let w=words[Math.floor(Math.random()*words.length)];
-let scr=w.split("").sort(()=>Math.random()-0.5).join("");
-game.innerHTML=`<h2>Word Scramble</h2><h1>${scr}</h1><input id="word"><button onclick="alert(word.value.toUpperCase()=='${w}'?'Correct!':'Try again!')">Check</button><br><button onclick="back()">Back</button>`;
-}
-
-function simonGame(){
-let colors=["🔴","🟢","🔵","🟡"];
-let pattern=[colors[Math.floor(Math.random()*4)],colors[Math.floor(Math.random()*4)],colors[Math.floor(Math.random()*4)]];
-game.innerHTML=`<h2>Simon Says</h2><p>Remember this:</p><h1>${pattern.join(" ")}</h1><button onclick="alert('Pattern was: ${pattern.join(" ")}')">Show Answer</button><br><button onclick="back()">Back</button>`;
-}
-</script>
-
+    <div class="container">
+        <h1>Weather App</h1>
+        <input type="text" id="city" placeholder="Enter city">
+        <button onclick="getWeather()">Get Weather</button>
+        <div id="weather"></div>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+ 
+.container {
+    max-width: 600px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+ 
+h1 {
+    text-align: center;
+}
+ 
+input {
+    width: 70%;
+    padding: 10px;
+}
+ 
+button {
+    padding: 10px;
+}
+async function getWeather() {
+    const city = document.getElementById('city').value;
+    const apiKey = 'YOUR_API_KEY'; // Replace with your OpenWeatherMap API key
+    const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`);
+    const data = await response.json();
+ 
+    if (data.cod === 200) {
+        document.getElementById('weather').innerHTML = `
+            <h2>${data.name}</h2>
+            <p>Temperature: ${data.main.temp} °C</p>
+            <p>Weather: ${data.weather[0].description}</p>
+        `;
+    } else {
+        document.getElementById('weather').innerHTML = `<p>City not found!</p>`;
+    }
+}
