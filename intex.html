@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌍 Global Weather</title>
+
+<style>
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+    color: white;
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    transition: 0.5s;
+}
+
+.container {
+    max-width: 500px;
+    margin: auto;
+    background: rgba(0,0,0,0.5);
+    padding: 20px;
+    border-radius: 15px;
+}
+
+h1 {
+    margin-bottom: 10px;
+}
+
+input {
+    width: 80%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    font-size: 16px;
+}
+
+button {
+    margin-top: 10px;
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: none;
+    background: #ff7eb3;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #ff4f81;
+}
+
+select {
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+#weather {
+    margin-top: 20px;
+    font-size: 18px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>🌍 Global Weather</h1>
+
+    <!-- Language -->
+    <select onchange="changeLang(this.value)">
+        <option value="en">English</option>
+        <option value="ka">ქართული</option>
+        <option value="es">Español</option>
+        <option value="fr">Français</option>
+    </select>
+
+    <br>
+
+    <!-- Easy input -->
+    <input 
+        type="text" 
+        id="city" 
+        placeholder="🌈 Type a city..." 
+        oninput="autoSearch()"
+    >
+
+    <br>
+
+    <!-- Location button -->
+    <button onclick="getLocation()">📍 My Weather</button>
+
+    <div id="weather"></div>
+</div>
+
+<script>
+const apiKey = "YOUR_API_KEY";
+
+let currentLang = "en";
+let timeout;
+
+// Simple translations
+const translations = {
+    en: {
+        error: "😕 Can't find that place... try another one!",
+        hot: "🔥 It's really hot!",
+        cold: "❄️ It's very cold!",
+        nice: "🌤️ Nice weather!"
+    },
+    ka: {
+        error: "😕 ვერ ვიპოვე... სცადე სხვა 😊",
+        hot: "🔥 ძალიან ცხელა!",
+        cold: "❄️ ძალიან ცივა!",
+        nice: "🌤️ კარგი ამინდია!"
+    },
+    es: {
+        error: "😕 No se encontró...",
+        hot: "🔥 Hace mucho calor!",
+        cold: "❄️ Hace frío!",
+        nice: "🌤️ Buen clima!"
+    },
+    fr: {
+        error: "😕 Introuvable...",
+        hot: "🔥 Il fait très chaud!",
+        cold: "❄️ Il fait froid!",
+        nice: "🌤️ Beau temps!"
+    }
+};
+
+function changeLang(lang) {
+    currentLang = lang;
+}
+
+// Auto search (no button needed)
+function autoSearch() {
+    clearTimeout(timeout);
+    timeout = setTimeout(getWeather, 700);
+}
+
+async function getWeather() {
+    const city = document.getElementById("city").value;
+    if (!city) return;
+
+    const res = await fetch(
+`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=${currentLang}`
+    );
+
+    const data = await res.json();
+    const t = translations[currentLang];
+
+    if (data.cod !== 200) {
+        document.getElementById("weather").innerHTML = t.error;
+        return;
+    }
+
+    // Background change
+    const weather = data.weather[0].main;
+
+    if (weather === "Rain") {
+        document.body.style.background = "linear-gradient(#4e54c8, #8f94fb)";
+    } else if (weather === "Clear") {
+        document.body.style.background = "linear-gradient(#fceabb, #f8b500)";
+    } else if (weather === "Snow") {
+        document.body.style.background = "linear-gradient(#e6dada, #274046)";
+    } else {
+        document.body.style.background = "linear-gradient(#4facfe, #00f2fe)";
+    }
+
+    // Fun message
+    let message = "";
+    if (data.main.temp > 30) message = t.hot;
+    else if (data.main.temp < 5) message = t.cold;
+    else message = t.nice;
+
+    document.getElementById("weather").innerHTML = `
+        <h2>📍 ${data.name}</h2>
+        <p>🌡️ ${data.main.temp}°C</p>
+        <p>☁️ ${data.weather[0].description}</p>
+        <p>${message}</p>
+    `;
+}
+
+// 📍 Get user's location
+function getLocation() {
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+        const { latitude, longitude } = pos.coords;
+
+        const res = await fetch(
+`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric&lang=${currentLang}`
+        );
+
+        const data = await res.json();
+
+        document.getElementById("weather").innerHTML = `
+            <h2>📍 ${data.name}</h2>
+            <p>🌡️ ${data.main.temp}°C</p>
+            <p>☁️ ${data.weather[0].description}</p>
+        `;
+    });
+}
+</script>
+
+</body>
+</html>
